@@ -80,3 +80,13 @@ model Insurance {
   amount    Float
   createdAt DateTime @default(now())
 }
+model Funcionario {
+  id              Int      @id @default(autoincrement())
+  nome            String
+  email           String   @unique
+  cargo           String
+  salario         Float
+  dataContratacao DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
