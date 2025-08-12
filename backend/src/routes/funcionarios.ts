@@ -2,7 +2,6 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
 import prisma from '../lib/prisma'
 
 export default async function funcionariosRoutes(app: FastifyInstance) {
-  // Aplica autenticação em todas as rotas desse grupo
   app.addHook('preHandler', app.authenticate)
 
   app.get('/', async () => {
@@ -30,7 +29,8 @@ export default async function funcionariosRoutes(app: FastifyInstance) {
       })
       return reply.status(201).send(novoFuncionario)
     } catch (error) {
-      return reply.status(400).send({ message: 'Erro ao criar funcionário', error })
+      console.error(error)
+      return reply.status(400).send({ message: 'Erro ao criar funcionário', error: (error as Error).message })
     }
   })
 
@@ -49,8 +49,9 @@ export default async function funcionariosRoutes(app: FastifyInstance) {
         },
       })
       return funcionarioAtualizado
-    } catch {
-      return reply.status(404).send({ message: 'Funcionário não encontrado' })
+    } catch (error) {
+      console.error(error)
+      return reply.status(404).send({ message: 'Funcionário não encontrado', error: (error as Error).message })
     }
   })
 
@@ -58,9 +59,10 @@ export default async function funcionariosRoutes(app: FastifyInstance) {
     const { id } = request.params
     try {
       await prisma.funcionario.delete({ where: { id: Number(id) } })
-      return reply.send({ message: 'Funcionário excluído com sucesso' })
-    } catch {
-      return reply.status(404).send({ message: 'Funcionário não encontrado' })
+      return reply.status(204).send()
+    } catch (error) {
+      console.error(error)
+      return reply.status(404).send({ message: 'Funcionário não encontrado', error: (error as Error).message })
     }
   })
 }

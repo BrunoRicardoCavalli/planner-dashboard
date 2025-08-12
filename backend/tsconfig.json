@@ -1,17 +1,14 @@
 {
-  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "./src",
+    "module": "CommonJS",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
     "outDir": "./dist",
-    "types": ["node"],
-    "lib": ["esnext"],
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "esModuleInterop": true
+    "rootDir": "./src",
+    "types": ["node", "jest"],
+    "sourceMap": true
   },
-  "include": ["src/**/*.ts", "src/types/**/*.d.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
