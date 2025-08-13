@@ -1,35 +1,57 @@
-import Fastify from 'fastify';
-import swagger from '@fastify/swagger';
-import swaggerUi from '@fastify/swagger-ui';
-import { authRoutes } from './routes/auth';
-import { userRoutes } from './routes/users';
-import { goalsRoutes } from './routes/goals';
-import authenticate from './plugins/authenticate';
-import funcionariosRoutes from './routes/funcionarios';
+import Fastify from "fastify";
+import cors from "@fastify/cors";
+import swagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
 
-const app = Fastify();
+import funcionariosRoutes from "./routes/funcionarios";
 
-// Swagger setup
-app.register(swagger, { /* sua config swagger aqui */ });
-app.register(swaggerUi, { /* sua config swagger-ui aqui */ });
+const app = Fastify({ logger: true });
 
-// Registra plugin JWT (no seu authenticate.ts deve ter o register do jwt)
-app.register(authenticate);
+// CORS para o frontend
+app.register(cors, {
+  origin: "http://localhost:3001",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+});
+
+// Swagger
+app.register(swagger, {
+  swagger: {
+    info: {
+      title: "Planner Dashboard API",
+      description: "API do backend do Planner Dashboard",
+      version: "1.0.0",
+    },
+    host: "localhost:3000",
+    schemes: ["http"],
+    consumes: ["application/json"],
+    produces: ["application/json"],
+  },
+});
+
+app.register(swaggerUi, {
+  routePrefix: "/docs",
+  uiConfig: {
+    docExpansion: "full",
+    deepLinking: false,
+  },
+  staticCSP: true,
+  transformSpecification: (swaggerObject) => swaggerObject,
+});
 
 // Rotas
-app.register(authRoutes, { prefix: '/auth' }); // login em /auth/login
-app.register(userRoutes, { prefix: '/users' });
-app.register(goalsRoutes, { prefix: '/goals' });
-app.register(funcionariosRoutes, { prefix: '/funcionarios' });
+app.register(funcionariosRoutes, { prefix: "/funcionarios" });
 
-// Listen e export
-export default app;
-
+// Start do servidor
 if (require.main === module) {
-  app.listen({ port: 3000, host: '0.0.0.0' })
+  app.listen({ port: 3000, host: "0.0.0.0" })
     .then(() => {
-      console.log('🚀 Server running on http://localhost:3000');
-      console.log('📚 Swagger docs on http://localhost:3000/docs');
+      console.log("🚀 Server running on http://localhost:3000");
+      console.log("📚 Swagger docs on http://localhost:3000/docs");
     })
-    .catch(console.error);
+    .catch(err => {
+      console.error(err);
+      process.exit(1);
+    });
 }
+
+export default app;
