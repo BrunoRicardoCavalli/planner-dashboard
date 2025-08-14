@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend - Planner Dashboard
 
-## Getting Started
+Este é o frontend do Planner Dashboard, desenvolvido com **Next.js 14 + TypeScript** e **ShadCN/UI**.
 
-First, run the development server:
+## Instalação
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+cd frontend
+npm install
+Variáveis de ambiente
+Crie um arquivo .env na raiz do frontend com:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ini
+Copiar
+Editar
+NEXT_PUBLIC_API_URL=http://localhost:3000
+NEXT_PUBLIC_API_URL: URL base da API do backend.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Rodando localmente
+bash
+Copiar
+Editar
+npm run dev       # inicia em modo desenvolvimento
+npm run build     # gera build de produção
+npm start         # roda a versão compilada
+O frontend por padrão roda em http://localhost:3001 (conforme Docker Compose).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Funcionalidades
+Cadastro, edição e exclusão de funcionários.
 
-## Learn More
+Exibição de gráficos:
 
-To learn more about Next.js, take a look at the following resources:
+Gráfico de barras: salário médio por cargo.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Gráfico de pizza: distribuição salarial por cargo.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Responsivo e compatível com zoom em desktop.
 
-## Deploy on Vercel
+Integração com backend via REST API.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Docker
+O Dockerfile já gera o build e expõe a porta 3000.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Para subir via Docker Compose (junto com backend e banco):
+
+bash
+Copiar
+Editar
+docker-compose up --build
+Estrutura
+src/app/ → páginas Next.js
+
+src/components/ → componentes React (Form, Table, Charts)
+
+src/lib/ → funções de API
+
+src/types/ → tipos TypeScript
+
+Observações
+O frontend consome a API do backend e requer JWT para autenticação.
+
+Recomendado instalar React DevTools para facilitar o desenvolvimento.

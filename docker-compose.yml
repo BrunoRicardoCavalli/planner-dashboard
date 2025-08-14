@@ -1,27 +1,41 @@
-version: '3.8'
+version: "3.9"
 
 services:
+  db:
+    image: postgres:15
+    container_name: planner_db
+    environment:
+      POSTGRES_USER: planner
+      POSTGRES_PASSWORD: plannerpw
+      POSTGRES_DB: plannerdb
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
   backend:
     build:
       context: ./backend
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=postgresql://planneruser:sql123@host.docker.internal:5433/plannerdb?schema=public
-      - JWT_SECRET=minha_chave_super_secreta
+      dockerfile: Dockerfile
+    container_name: planner_backend
     depends_on:
       - db
-
-  db:
-    image: postgres:15-alpine
     environment:
-      POSTGRES_USER: planneruser
-      POSTGRES_PASSWORD: sql123
-      POSTGRES_DB: plannerdb
+      DATABASE_URL: postgresql://planner:plannerpw@db:5432/plannerdb
     ports:
-      - "5433:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - "3000:3000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: planner_frontend
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:3000
+    ports:
+      - "3001:3000"
 
 volumes:
-  postgres_data:
+  pg_data:
